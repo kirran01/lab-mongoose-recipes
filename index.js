@@ -13,10 +13,10 @@ mongoose
   .then((x) => {
     console.log(`Connected to the database: "${x.connection.name}"`);
     // Before adding any recipes to the database, let's remove all existing ones
-    return Recipe.deleteMany()
+    return Recipe.deleteMany();
   })
   .then(() => {
-   return Recipe.create({
+    return Recipe.create({
       title: "chicken",
       level: "Easy Peasy",
       ingredients: ["chicken"],
@@ -26,7 +26,7 @@ mongoose
         "https://assets.epicurious.com/photos/62f16ed5fe4be95d5a460eed/1:1/w_2240,c_limit/RoastChicken_RECIPE_080420_37993.jpg",
       duration: 10,
       creator: "me",
-    })
+    });
   })
   .then((savedRecipe) => {
     console.log("recipe title:", savedRecipe.title);
@@ -36,7 +36,21 @@ mongoose
     newRecipes.forEach((recipe) => {
       console.log(recipe.title);
     });
+    return Recipe.findOneAndUpdate(
+      { title: "Rigatoni alla Genovese" },
+      { duration: 200 },
+      { new: true }
+    );
   })
+  .then((rigatoni) => {
+    // console.log(rigatoni, "updated Item")
+    return Recipe.deleteOne({ title: "Carrot Cake" });
+  })
+  .then((deleted) => {
+    console.log("deletion of CC succesful", deleted);
+    return mongoose.connection.close();
+  })
+
   .catch((error) => {
     console.error("Error connecting to the database", error);
   });
